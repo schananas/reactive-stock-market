@@ -1,0 +1,33 @@
+# https://www.jetbrains.com/help/idea/http-client-in-product-code-editor.html
+
+
+### Place an order
+POST http://localhost:8080/orders
+Accept: application/json
+Content-Type: application/json
+
+{
+  "asset": "BTC",
+  "price": 43251.00,
+  "amount": 2.0,
+  "direction": "BUY"
+}
+
+#### Get an order
+GET http://localhost:8080/orders/1
+Accept: application/json
+Content-Type: application/json
+
+### Cencel an order
+POST http://localhost:8080/orders/1/cancel
+Accept: application/json
+Content-Type: application/json
+
+{
+  "asset": "BTC",
+  "price": 43251.00,
+  "amount": 2.0,
+  "direction": "BUY"
+}
+
+###

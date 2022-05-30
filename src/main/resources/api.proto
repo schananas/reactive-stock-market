@@ -1,0 +1,45 @@
+syntax = "proto3";
+
+package io.bux.matchingengine.api;
+
+option java_package = "io.bux.matchingengine.api.protobuf";
+option java_multiple_files = true;
+
+enum OrderType {
+  BUY = 0;
+  SELL = 1;
+}
+
+/**
+DTO to carry order request
+ */
+message PlaceOrderRequest {
+  string asset = 1;
+  double price = 2;
+  double amount = 3;
+  OrderType direction = 4;
+}
+
+/**
+DTO to carry order status response
+ */
+message OrderStatusResponse {
+  int64 id = 1;
+  string timestamp = 2;
+  string asset = 3;
+  double  price = 4;
+  double amount = 5;
+  OrderType direction = 6;
+  repeated Trade trades = 7;
+  double pendingAmount = 8;
+}
+
+/**
+DTO to carry trade response
+ */
+message Trade {
+  int64 orderId = 1;
+  double amount = 2;
+  double price = 3;
+}
+
