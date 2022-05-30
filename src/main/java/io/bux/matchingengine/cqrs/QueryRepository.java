@@ -1,14 +1,26 @@
 package io.bux.matchingengine.cqrs;
 
-import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
 /**
+ * Interface to represent query repository
+ *
  * @author Stefan Dragisic
  */
 public interface QueryRepository<T> {
 
+    /**
+     * Updates projection with event. Repository uses this event to create/maintain projections.
+     *
+     * @param e - materialized event
+     */
     Mono<Void> updateProjection(Event e);
-    //Flux<Void> getBookOrders(String book);
+
+    /**
+     * Returns current order projection
+     *
+     * @param orderId - order identifier
+     * @return - materialized projection
+     */
     Mono<T> getOrder(long orderId);
 }
