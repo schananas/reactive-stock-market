@@ -20,7 +20,7 @@ import javax.annotation.PreDestroy;
  * <p>
  * Routes command for district assets/aggregates in parallel, but routes commands withing one aggregate sequentially.
  * <p>
- * Locking is done by Reactor {@see <a href="https://github.com/reactor/reactor-core/blob/178e0c7cf799122afdd6bf89be32975d2b433609/reactor-core/src/main/java/reactor/core/publisher/SinksSpecs.java#L46">tryAcquire</a>}
+ * Thread synchronization is done by Reactor {@see <a href="https://github.com/reactor/reactor-core/blob/178e0c7cf799122afdd6bf89be32975d2b433609/reactor-core/src/main/java/reactor/core/publisher/SinksSpecs.java#L46">tryAcquire</a>}
  * <p>
  * Is fire and forget, canceling subscription will not change execution flow, but subscriber has option to "stay" and
  * get signaled once corresponding event has been materialized or if execution has failed.
