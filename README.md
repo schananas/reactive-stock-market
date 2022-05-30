@@ -1,16 +1,14 @@
 #Bux backend assigment
 
-Assigment for Interview
+Candidate: Stefan Dragisic
 
-##Candidate: Stefan Dragisic
-
-### Introduction
+## Introduction
 
 - Reactive CQRS application with matching engine as it core
 - Matching engine implemented using Max-Heap and Min-Heap
 - Supports backpressure and event streaming
 
-### Reasoning
+## Reasoning
 
 - **Matching engine**
     + Matching engine uses Max-Heap and Min-Heap
@@ -44,7 +42,7 @@ Assigment for Interview
     + The Protocol Buffers specification is implemented in many languages
     + Less Boilerplate Code - auto generated code, out-of-box JSON serializer...
 
-### Tests
+## Tests
 
 - [x] Unit tests
 - [x] Integration tests
@@ -56,11 +54,11 @@ Assigment for Interview
 |----|-----------|
 | 100%  |   96%         | 
 
-### Bonus
+## Bonus
 - [x] Order cancellation
 - [ ] Reactive Book UI
 
-### How to run
+## How to run
 
 Execute `mvn clean install` to build project and generate protobuf classes.
 
