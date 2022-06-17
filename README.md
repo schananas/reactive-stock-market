@@ -1,6 +1,4 @@
-# Bux backend assigment
-
-## Candidate: Stefan Dragisic
+# Reactive Stock Exchange
 
 ### Introduction
 

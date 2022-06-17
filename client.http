@@ -10,7 +10,7 @@ Content-Type: application/json
   "asset": "BTC",
   "price": 43251.00,
   "amount": 2.0,
-  "direction": "BUY"
+  "direction": "SELL"
 }
 
 #### Get an order
