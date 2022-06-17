@@ -5,7 +5,7 @@
 This project demonstrates reactive implementation of simple stock exchange platform.
 Originally assigment is given to Senior Software Engineers as a technical code interview in some stock/crypto exchange companies.
 
-Read original [system requirements here.](system_requirements.pdf)
+Read [system requirements here.](system_requirements.pdf)
 
 Takeaways of implementation:
 - Spring Boot application with matching engine as it core
@@ -51,6 +51,11 @@ Takeaways of implementation:
 - [x] Unit tests
 - [x] Integration tests
 - [x] Load test (stress test)
+
+### Bad things
+- Embrace eventual consistency
+- Don't block while waiting for response
+- REST should not return projection
 
 ### How to run
 
