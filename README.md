@@ -7,16 +7,16 @@ Originally assigment is given to Senior Software Engineers as a technical code i
 
 Read [system requirements here.](system_requirements.pdf)
 
-#### Takeaways of implementation:
+#### Takeaways:
 - Spring Boot application with matching engine as it core
-- Custom Reactive CQRS framework
+- Light custom Reactive CQRS framework
 - Matching engine implemented using Max-Heap and Min-Heap
 - Application supports backpressure and event streaming
 
 ### Implementation
 
 - **Matching engine**
-    + Matching engine uses Max-Heap and Min-Heap
+    + [Matching Engine](src/main/java/com/github/schananas/reactivestockexchange/domain/engine/MatchingEngine.java) uses Max-Heap and Min-Heap
     + Time complexity for critical operations are as:
         + Add – O(log N)
         + Cancel – O(1)
