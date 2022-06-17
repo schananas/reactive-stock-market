@@ -7,7 +7,7 @@ Originally assigment is given to Senior Software Engineers as a technical code i
 
 Read [system requirements here.](system_requirements.pdf)
 
-Takeaways of implementation:
+#### Takeaways of implementation:
 - Spring Boot application with matching engine as it core
 - Custom Reactive CQRS framework
 - Matching engine implemented using Max-Heap and Min-Heap
