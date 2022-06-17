@@ -18,7 +18,7 @@ import java.util.TreeSet;
 import java.util.concurrent.atomic.AtomicLong;
 
 /**
- * Single threaded matching engine - any thread synchronization should be done external.
+ * Single threaded matching engine - any thread synchronization should be done externally.
  * <p>
  * Uses Max-Heap and Min-Heap {@link TreeSet}
  * <p>
