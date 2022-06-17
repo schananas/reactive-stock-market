@@ -4,7 +4,8 @@
 
 This project demonstrates reactive implementation of simple stock exchange platform.
 Originally assigment is given to Senior Software Engineers as a technical code interview in some stock/crypto exchange companies.
-See original [system requirements](system_requirements.pdf)
+
+Read original [system requirements here.](system_requirements.pdf)
 
 Takeaways of implementation:
 - Spring Boot application with matching engine as it core
