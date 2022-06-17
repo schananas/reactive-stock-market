@@ -65,7 +65,7 @@ public class MarketController {
 
     /**
      * Not used - POC
-     * Intended to UI or client applications to mantain their own projection
+     * Intended to UI or client applications to maintain their own projection
      *
      * @param asset
      * @return streams all events from aggregate
@@ -84,7 +84,7 @@ public class MarketController {
      */
     @GetMapping("/orders/{orderId}")
     public Mono<OrderStatusResponse> getOrder(@PathVariable Long orderId) {
-        return bookQueryRepository.getOrder(orderId)
+        return bookQueryRepository.getProjection(orderId)
                                   .map(this::toOrderStatus);
     }
 
@@ -96,7 +96,7 @@ public class MarketController {
      */
     @PostMapping("/orders/{orderId}/cancel")
     public Mono<ResponseEntity<String>> cancelOrder(@PathVariable Long orderId) {
-        return bookQueryRepository.getOrder(orderId)
+        return bookQueryRepository.getProjection(orderId)
                                   .flatMap(MarketController::validateOrderAmount)
                                   .flatMap(this::sendCancelCommand)
                                   .switchIfEmpty(Mono.error(new IllegalStateException(
@@ -114,7 +114,7 @@ public class MarketController {
     }
 
     private Mono<? extends OrderEntry> getOrderProjection(OrderAcceptedEvent ev) {
-        return bookQueryRepository.getOrder(ev.orderId())
+        return bookQueryRepository.getProjection(ev.orderId())
                                   .repeatWhenEmpty(5, o -> o.delayElements(
                                           Duration.ofMillis(50)));
     }

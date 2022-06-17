@@ -35,7 +35,7 @@ public class BookAggregateRepository implements AggregateRepository<Book> {
         return Mono.fromCallable(() -> aggregates.computeIfAbsent(aggregateId, (k) -> {
             Book book = new Book(aggregateId);
             //subscribe query projection for book events
-            book.aggregateEvents().flatMap(bookQueryRepository::updateProjection).subscribe();
+            book.aggregateEvents().concatMap(bookQueryRepository::updateProjection).subscribe();
             return book;
         }));
     }

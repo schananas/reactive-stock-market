@@ -30,7 +30,7 @@ class BookQueryRepositoryTest {
                                                                               OrderType.SELL,
                                                                               BigDecimal.valueOf(10),
                                                                               BigDecimal.valueOf(100)))
-                                       .then(testSubject.getOrder(1L)))
+                                       .then(testSubject.getProjection(1L)))
                     .expectNextMatches(orderEntry -> orderEntry.orderId() == 1L
                             && orderEntry.entryTimestamp().equals(Instant.MIN)
                             && orderEntry.direction() == OrderType.SELL
@@ -51,7 +51,7 @@ class BookQueryRepositoryTest {
                                                                                       43251.00),
                                                                               BigDecimal.valueOf(
                                                                                       1.0)))
-                                       .then(testSubject.getOrder(0L)))
+                                       .then(testSubject.getProjection(0L)))
                     .expectNextMatches(orderEntry -> orderEntry.orderId() == 0L
                             && orderEntry.entryTimestamp().equals(Instant.MIN)
                             && orderEntry.direction() == OrderType.SELL
@@ -74,7 +74,7 @@ class BookQueryRepositoryTest {
                                                                               BigDecimal.valueOf(
                                                                                       0.25)
                                        ))
-                                       .then(testSubject.getOrder(1L)))
+                                       .then(testSubject.getProjection(1L)))
                     .expectNextMatches(orderEntry -> orderEntry.orderId() == 1L
                             && orderEntry.entryTimestamp().equals(Instant.MIN)
                             && orderEntry.direction() == OrderType.BUY
@@ -103,7 +103,7 @@ class BookQueryRepositoryTest {
                                                                                BigDecimal.valueOf(
                                                                                        0.65)
                                        ))
-                                       .then(testSubject.getOrder(0L)))
+                                       .then(testSubject.getProjection(0L)))
                     .expectNextMatches(orderEntry -> orderEntry.orderId() == 0L
                             && orderEntry.entryTimestamp().equals(Instant.MIN)
                             && orderEntry.direction() == OrderType.SELL
@@ -136,7 +136,7 @@ class BookQueryRepositoryTest {
                                                                                BigDecimal.valueOf(
                                                                                        0.0)
                                        ))
-                                       .then(testSubject.getOrder(0L)))
+                                       .then(testSubject.getProjection(0L)))
                     .expectNextMatches(orderEntry -> orderEntry.orderId() == 0L
                             && orderEntry.entryTimestamp().equals(Instant.MIN)
                             && orderEntry.direction() == OrderType.SELL

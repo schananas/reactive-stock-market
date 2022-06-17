@@ -30,7 +30,7 @@ public class BookQueryRepository implements QueryRepository<OrderEntry> {
      * @return - materialized projection
      */
     @Override
-    public Mono<OrderEntry> getOrder(long orderId) {
+    public Mono<OrderEntry> getProjection(long orderId) {
         return Mono.fromCallable(() -> projection.get(orderId));
     }
 

@@ -17,10 +17,10 @@ public interface QueryRepository<T> {
     Mono<Void> updateProjection(Event e);
 
     /**
-     * Returns current order projection
+     * Returns materialized projection
      *
-     * @param orderId - order identifier
+     * @param projectionId - order identifier
      * @return - materialized projection
      */
-    Mono<T> getOrder(long orderId);
+    Mono<T> getProjection(long projectionId);
 }

@@ -2,11 +2,17 @@
 
 ### Introduction
 
-- Reactive CQRS application with matching engine as it core
-- Matching engine implemented using Max-Heap and Min-Heap
-- Supports backpressure and event streaming
+This project demonstrates reactive implementation of simple stock exchange platform.
+Originally assigment is given to Senior Software Engineers as a technical code interview in stock/crypto exchange companies.
+See original [system requirements](system_requirements.pdf)
 
-### Reasoning
+Takeaways of implementation:
+- Spring Boot application with matching engine as it core
+- Custom Reactive CQRS framework
+- Matching engine implemented using Max-Heap and Min-Heap
+- Application supports backpressure and event streaming
+
+### Implementation
 
 - **Matching engine**
     + Matching engine uses Max-Heap and Min-Heap
@@ -16,7 +22,6 @@
     + Buy tree - The collection of orders sorted in the ascending order, that is, higher buy prices have priority to be matched over lower.
     + Sell tree - The collection of orders in the descending order, that is, lower sell prices have priority to be matched over higher.
     + Each state transition is the consequence of an event. Events are played sequentially and therefore engine is single-threaded. Thread synchronisation is handled outside of engine.
-
 
 - **Reactive**
     + Asynchronous, event driven, non-blocking programming perfectly fits for given problem. We want to subscribe to engine updates instead of blocking the threads.
@@ -45,16 +50,6 @@
 - [x] Unit tests
 - [x] Integration tests
 - [x] Load test (stress test)
-
-**Coverage:**
-
-| Classes | Lines |
-|----|-----------|
-| 100%  |   96%         | 
-
-### Bonus
-- [x] Order cancellation
-- [ ] Reactive Book UI
 
 ### How to run
 
