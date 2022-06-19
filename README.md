@@ -46,6 +46,15 @@ Read [system requirements here.](system_requirements.pdf)
     + The Protocol Buffers specification is implemented in many languages
     + Less Boilerplate Code - auto generated code, out-of-box JSON serializer...
 
+### Reactive vs Blocking
+
+![Blocking shared](img/blocking_shared.svg)
+
+![Reactive shared](img/reactive_shared.svg)
+
+![Reactive non-shared](img/reactive_non_shared.svg)
+
+
 ### Tests
 
 - [x] Unit tests
