@@ -48,11 +48,11 @@ public class CommandBus {
                                                    .doOnNext(n -> logger.debug("{} being executed....",
                                                                                n.getCommand().getClass()
                                                                                 .getSimpleName()))
-                                                   .groupBy(cw -> cw.getCommand().aggregateId())
-                                                   .flatMap(aggregateCommands -> aggregateCommands
+                                                   .groupBy(cw -> cw.getCommand().aggregateId()) //multiplex
+                                                   .flatMap(aggregateCommands -> aggregateCommands //and execute distinct assets in parallel
                                                            .concatMap(cmd -> aggregateRepository
                                                                    .load(cmd.getCommand().aggregateId())
-                                                                   .flatMap(aggregate -> aggregate.routeCommand(cmd.getCommand()) //potential performance boost - flatMapSequential
+                                                                   .flatMap(aggregate -> aggregate.routeCommand(cmd.getCommand())
                                                                                                   .flatMap(event -> aggregate.routeEvent(
                                                                                                                                      event)
                                                                                                                              .then(cmd.signalMaterialized(
@@ -76,6 +76,7 @@ public class CommandBus {
     public Mono<SourcingEvent> sendCommand(Command command) {
         return Mono.defer(() -> {
             Sinks.One<SourcingEvent> actionResult = Sinks.one();
+            //de-multiplexes multiple subscriptions by publishing commands to a single flow
             return Mono.<Void>fromRunnable(() -> commandExecutor.emitNext(new CommandWrapper(command,
                                                                                              actionResult::tryEmitValue,
                                                                                              actionResult::tryEmitError),
