@@ -6,8 +6,10 @@ This project takes you through the design of simple reactive stock market applic
 
 #### Takeaways:
 - Spring Boot application with matching engine as it core
-- Light custom Reactive CQRS framework
+- Supports limit order
 - Matching engine implemented using Max-Heap and Min-Heap
+- Light custom Reactive CQRS framework
+- Lockless - light thread synchronisation and good scalability potential
 - Application supports backpressure and event streaming
 
 ### Anatomy
@@ -17,51 +19,97 @@ This project takes you through the design of simple reactive stock market applic
     + Time complexity for critical operations are as:
         + Add – O(log N)
         + Cancel – O(1)
-    + Buy tree - The collection of orders sorted in the ascending order, that is, higher buy prices have priority to be matched over lower.
-    + Sell tree - The collection of orders in the descending order, that is, lower sell prices have priority to be matched over higher.
-    + Each state transition is the consequence of an event. Events are played sequentially and therefore engine is single-threaded. Thread synchronisation is handled outside of engine.
+    + Buy tree - The collection of orders sorted in the ascending order, that is, higher buy prices have priority to be matched over lower
+    + Sell tree - The collection of orders in the descending order, that is, lower sell prices have priority to be matched over higher
+    + Each state transition is the consequence of an event. Events are played sequentially and therefore engine is single-threaded
+
 
 - **Reactive**
-    + Asynchronous, event driven, non-blocking programming perfectly fits for given problem. We want to subscribe to engine updates instead of blocking the threads.
+    + Asynchronous, event driven, non-blocking programming perfectly fits for given project. We want to react to engine events when they happen instead of waiting and blocking the threads
     + Business logic can be broken down into a pipeline of steps where each of the steps can be executed asynchronously
-    + Using Reactor most parallelism and concurrency in project is carefully handled.
-    + Operations are optimised to execute in parallel when possible. For example orders of single asset are executed sequentially, but orders of different assets are executed in parallel.
+    + Using Reactor most parallelism and concurrency in project is carefully handled
+    + Operations are optimised to execute in parallel when possible. For example orders within single asset are executed sequentially, but orders of distinct assets are executed in parallel
+
 
 - **DDD**
     + The goal of domain-driven design (DDD) is to establish a ubiquitous language and detailed understanding of the business needs and processes
-    + This will allow the business domain experts -- those most familiar with the stock trading domain and the role our business has in it -- to communicate their domain knowledge with the rest of the team.
-    + Event storming and DDD allow us to model our system in an asynchronous way, which is suitable for reactive, cloud-native systems analysis and design.
+    + This allows the business domain experts (those most familiar with the stock trading domain) to communicate their domain knowledge with the rest of the team.
+    + Event storming and DDD allow us to model our system in an asynchronous way, which is suitable for reactive, cloud-native systems
   
+
 - **CQRS**
     + Greatly simplifies architecture, scalability and modularity
-    + Model order requests as commands. Command handlers validates request and then either accepts or reject order request.
-    + All state changes can be modeled as an event, and can be stored and replayed if needed. Lack of concurrency between events also ensures determinism and makes code much cleaner and more efficient to run.
-    + This avoids need to store complicated states and structures in database, instead if needed in-memory state can be reconstructed based on past events.
-    + Use projections to separate aggregate state and state used for querying. We are able to build highly optimised projections based on business needs. We can query them without need to peek into engine state, and avoid potential performance congestions.
+    + Order requests are modeled as commands. Command handlers validates request and then either accepts or reject order request
+    + All state changes can be modeled as events, and can be stored and replayed if needed. Lack of concurrency between events also ensures determinism and makes code much cleaner and more efficient to run
+    + This avoids need to store complicated states and structures in database, instead if needed in-memory state can be reconstructed based on past events
+    + Uses projections to separate engine state and business state used for querying. We are able to build highly optimised projections based on business needs. We can query them without need to peek into engine state, and avoid potential performance congestions
 
 
 - **Protobuf**
     + Describes API schema once, in proto format (see [api.proto](src/main/resources/api.proto))
     + Supports backward compatibility
     + The Protocol Buffers specification is implemented in many languages
-    + Less Boilerplate Code - auto generated code, out-of-box JSON serializer...
+    + Less Boilerplate Code - auto generated code
 
 ### Event storming
 
+Event storming is a workshop-based method to quickly find out what is happening in the domain and to describe business needs.
+This model is based upon easy to understand and follow [Event Storming template by Judith Birmoser]( https://miro.com/miroverse/event-storming/?utm_source%3Dgoogle%26utm_medium%3Dcpc%26utm_campaign%3DS|GOO|NB|Tier2|ALL-EN|Core%26utm_adgroup=dsa%26adgroupid=116435751323%26utm_custom%3D12123522200%26utm_content%3D492751716473%26utm_term%3D%26matchtype=%26device=c%26location=1028595&gclid=CjwKCAjwwdWVBhA4EiwAjcYJEJPbxGrRjNnNieMFEhNtVSMG6_3fq2uPVYze0OL-bK_JCNdh4rGAEBoCvEMQAvD_BwE?social=copy-link
+)
+
+ - **Terminology**
+
 ![Terminology](img/eventstorming/terminology_0.jpg)
+
+
+ + **Domain Event** - An event that occurs in the business process. Written in past tense.
+ + **User/Actor** - A person who executes a command through a view.
+ + **Business Process** - Processes a command according to business rules and logic. Creates one or more domain events.
+ + **Command** - A command executed by a user through a view on an aggregate that results in the creation of a domain event.
+ + **Aggregate** - Cluster of domain objects that can be  treated as a single unit.
+ + **View / Read Model** - A view that users interact with to  carry out a task in the system.
+ 
+
+ - **Collect Domain Events (Big Picture)**
+
+Here we are trying to imagine which events our system is going to use.
+As its a simple stock market, following events are imagined to occur:
 ![Define domain events](img/eventstorming/define_domain_events_1.jpg)
+
+System needs to either accept or reject order after validation (minimum amount larger than zero, enough amount on account, trading not paused, etc...)
+So we have two events: Order Accepted and Order Rejected.
+
+Then we need some events that our matching engine can produce. It may match a order immediately or place order in book if order can't be matched immediately.
+Two more on the board: Order Placed and Order Matched.
+
+Next we would like to allow our users to cancel their orders if possible.
+First users need to request to cancel order, if such request can be fulfilled order gets canceled, fully or partially.
+Last two events: Order Cancellation Requested and Order Cancelled.
+
+ - **Refine Domain Events**
+
+Now we arrange events in order they could happened and group them together.
+
 ![Refine domain events](img/eventstorming/refine_domain_events_2.jpg)
+
+Events Order Accepted, Order Rejected, Cancellation Requested are consequence of user initiated command.
+In the project we will mark them as sourcing events as they are used to changing aggregate state and projection.
+
+Events Order Placed, Order Matched and Order Cancelled are consequence of business process (matching engine).
+We will mark them as Update Events in the project, because they are used only to update project, and they can't influence aggregate state.
+
+- **Process modeling**
+
+Now that we know who creates which event, lets add these actors into picture
+
 ![Process modeling](img/eventstorming/process_modeling_3.jpg)
+
+- **Finding aggregates**
+
+As this is a simple stock market application, without user management, security, payment system integration, etc. finding aggregate is peace of cake: there is only one!
+This aggregate will represent our book of a single asset/instrument.
+
 ![Find aggregates](img/eventstorming/find_aggregates_4.jpg)
-
-<span style="background-color:red">some **This is Red Bold.** text</span>
-
-Order requests are modeled as commands
-...
-Aggregate is Book...
-Matching engine is aggregate entity...
-Two type of events, update and event sourcing events...
-queries are going to projection instead to the state...
 
 
 ### Reactive vs Blocking
@@ -114,7 +162,13 @@ Number of segments is decided by the parameter called concurrency levl which is 
 
 Vertical horizontal...
 
-long vs bigdecimal and pitfalls
+
+** Double vs BigDecimal **
+Because floats and doubles cannot accurately represent the base 10 multiples that we use for money.
+This issue isn't just for Java, it's for any programming language that uses base 2 floating-point types.
+
+Bigdecimal pitfalls:
+https://blogs.oracle.com/javamagazine/post/four-common-pitfalls-of-the-bigdecimal-class-and-how-to-avoid-them
 
 ### Optimisation and improvements
 
