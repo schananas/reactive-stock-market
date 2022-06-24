@@ -47,11 +47,12 @@ This project takes you through the design of simple reactive stock market applic
     + Less Boilerplate Code - auto generated code, out-of-box JSON serializer...
 
 ### Event storming
-<img alt="Terminology" height="300px" src="img/eventstorming/terminology_0.jpg"/>
-<img alt="Define domain events" src="img/eventstorming/define_domain_events_1.jpg" width="450px"/>
-<img alt="Refine domain events" src="img/eventstorming/refine_domain_events_2.jpg"/>
-<img alt="Process modeling" src="img/eventstorming/process_modeling_3.jpg"/>
-<img alt="Find aggregates" src="img/eventstorming/find_aggregates_4.jpg"/>
+
+![Terminology](img/eventstorming/terminology_0.jpg)
+![Define domain events](img/eventstorming/define_domain_events_1.jpg)
+![Refine domain events](img/eventstorming/refine_domain_events_2.jpg)
+![Process modeling](img/eventstorming/process_modeling_3.jpg)
+![Find aggregates](img/eventstorming/find_aggregates_4.jpg)
 
 <span style="background-color:red">some **This is Red Bold.** text</span>
 
