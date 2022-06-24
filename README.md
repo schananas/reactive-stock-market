@@ -2,10 +2,7 @@
 
 ### Introduction
 
-This project demonstrates reactive implementation of simple stock market platform.
-Originally assigment is given to Senior Software Engineers as a technical coding interview in some stock/crypto market companies.
-
-Read [system requirements here.](system_requirements.pdf)
+This project takes you through the design of simple reactive stock market application.
 
 #### Takeaways:
 - Spring Boot application with matching engine as it core
@@ -13,7 +10,7 @@ Read [system requirements here.](system_requirements.pdf)
 - Matching engine implemented using Max-Heap and Min-Heap
 - Application supports backpressure and event streaming
 
-### Implementation
+### Anatomy
 
 - **Matching engine**
     + [Matching Engine](src/main/java/com/github/schananas/reactivestockmarket/domain/engine/MatchingEngine.java) uses Max-Heap and Min-Heap
@@ -30,7 +27,11 @@ Read [system requirements here.](system_requirements.pdf)
     + Using Reactor most parallelism and concurrency in project is carefully handled.
     + Operations are optimised to execute in parallel when possible. For example orders of single asset are executed sequentially, but orders of different assets are executed in parallel.
 
-
+- **DDD**
+    + The goal of domain-driven design (DDD) is to establish a ubiquitous language and detailed understanding of the business needs and processes
+    + This will allow the business domain experts -- those most familiar with the stock trading domain and the role our business has in it -- to communicate their domain knowledge with the rest of the team.
+    + Event storming and DDD allow us to model our system in an asynchronous way, which is suitable for reactive, cloud-native systems analysis and design.
+  
 - **CQRS**
     + Greatly simplifies architecture, scalability and modularity
     + Model order requests as commands. Command handlers validates request and then either accepts or reject order request.
@@ -44,6 +45,23 @@ Read [system requirements here.](system_requirements.pdf)
     + Supports backward compatibility
     + The Protocol Buffers specification is implemented in many languages
     + Less Boilerplate Code - auto generated code, out-of-box JSON serializer...
+
+### Event storming
+![Terminology](img/eventstorming/terminology_0.jpg)
+![Define domain events](img/eventstorming/define_domain_events_1.jpg)
+![Refine domain events](img/eventstorming/refine_domain_events_2.jpg)
+![Process modeling](img/eventstorming/process_modeling_3.jpg)
+![Find aggregates](img/eventstorming/find_aggregates_4.jpg)
+
+<span style="background-color:red">some **This is Red Bold.** text</span>
+
+Order requests are modeled as commands
+...
+Aggregate is Book...
+Matching engine is aggregate entity...
+Two type of events, update and event sourcing events...
+queries are going to projection instead to the state...
+
 
 ### Reactive vs Blocking
 
@@ -77,10 +95,25 @@ In this case we just multiplex flow again and split it to two separate flows, ea
 
 ![Reactive non-shared](img/reactive_non_shared.svg)
 
+**Real example**
+
+Given this, this is what we would like to a achive.
+
+![Real example](img/reactive_wanted.svg)
+
+First step to de-multiplex user commands is not necessary as we multiplex right after.
+But it's done to preserve order of commands and to put all commands into project reactor context in order deal easier with further parallelism and concurrency.
+We multiplex pipeline for each aggregate id (instrument id).
+Now as we have parallel pipelines for distinct instruments, we remove most of the synchronisation from our components like Matching Engine.
+Question arises, why are aggregate and query repository represented as non-shared components, when they are singletons which all pipelines can access concurrently?
+Both components use ConcurrentHashMap (todo change implemenation) which in contract to SyrnoziedMap is not locking whole map on update. Instead ConcurrentHashMap is devided into segments and each segment maintains its own lock. Any thread that wants to enter into segment have to acquire that segments lock.
+Number of segments is decided by the parameter called concurrency levl which is passed while instantiating ConcurrentHashMap.As we multiplexed our pipelines per instrument id, we know that each pipleline will access map segments sequentialy, therefore whole pipleline remains lockless.
+
 **How to scale?** 
 
 Vertical horizontal...
 
+long vs bigdecimal and pitfalls
 
 ### Optimisation and improvements
 
@@ -88,6 +121,8 @@ Vertical horizontal...
 - Don't block while waiting for response
 - REST should not return projection
 - UI is also a different type of projection - build it using events!
+- Synchronous systems rely on request/response semantics; as in, we invoke a method or RESTful endpoint and expect a response.
+- The caller blocks until receiving a response. If the response is delayed or fails, this can lead to resource starvation due to accumulating timeouts. At the very minimum, any delay when integrating with third-party systems can cause noticeable latency in our services.
 - 
 ### Tests
 
@@ -101,3 +136,9 @@ Vertical horizontal...
 Execute `mvn clean install` to build project and generate protobuf classes.
 
 Then execute `mvn spring-boot:run` to run application, or use IDE of choice to run application as Spring Boot application.
+
+### Trivia
+
+Originally assigment is given to Senior Software Engineers as a technical coding interview in some stock/crypto market companies.
+
+Read [system requirements here.](system_requirements.pdf)
