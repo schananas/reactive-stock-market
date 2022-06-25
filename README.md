@@ -3,6 +3,7 @@
 ### Introduction
 
 This project takes you through the design of simple reactive stock market application.
+
 Sole purpose of this project is to educate.
 
 #### Takeaways:
@@ -11,8 +12,8 @@ Sole purpose of this project is to educate.
 - Matching engine is implemented using Max-Heap and Min-Heap
 - Lightweight and custom-built Reactive CQRS framework
 - Lockless - light thread synchronisation and good scalability potential
-- In-memory storage - in this demo all data is stored in memory without persistent storage
-- Application supports backpressure and event streaming
+- In-memory storage only
+- Supports backpressure and event streaming
 
 ### Anatomy
 
@@ -75,13 +76,14 @@ This model is based upon easy to understand and follow [Event Storming template 
  - **Collect Domain Events (Big Picture)**
 
 Here we are trying to imagine which events our system is going to use.
-As its a simple stock market, following events are imagined to occur:
+As it's a simple stock market, following events are imagined to occur:
+
 ![Define domain events](img/eventstorming/define_domain_events_1.jpg)
 
 System needs to either accept or reject order after validation (minimum amount larger than zero, enough amount on account, trading not paused, etc...)
 So we have two events: Order Accepted and Order Rejected.
 
-Then we need some events that our matching engine can produce. It may match a order immediately or place order in book if order can't be matched immediately.
+Then we need some events that our matching engine can produce. It may match an order immediately or place order in book if order can't be matched immediately.
 Two more on the board: Order Placed and Order Matched.
 
 Next we would like to allow our users to cancel their orders if possible.
@@ -90,11 +92,11 @@ Last two events: Order Cancellation Requested and Order Cancelled.
 
  - **Refine Domain Events**
 
-Now we arrange events in order they could happened and group them together.
+Now we arrange events in order they could happen and group them together.
 
 ![Refine domain events](img/eventstorming/refine_domain_events_2.jpg)
 
-Events Order Accepted, Order Rejected, Cancellation Requested are consequence of user initiated command.
+Events Order Accepted, Order Rejected, Cancellation Requested are consequence of user initiated commands.
 In the project we will mark them as sourcing events as they are used to changing aggregate state and projection.
 
 Events Order Placed, Order Matched and Order Cancelled are consequence of business process (matching engine).
@@ -108,7 +110,7 @@ Now that we know who creates which event, lets add these actors into picture
 
 - **Finding aggregates**
 
-As this is a simple stock market application, without user management, security, payment system integration, etc. finding aggregate is peace of cake: there is only one!
+As this is a simple stock market application, without user management, security, payment system integration, etc. finding aggregate is easy: there is only one!
 This aggregate will represent our book of a single asset/instrument.
 
 ![Find aggregates](img/eventstorming/find_aggregates_4.jpg)
