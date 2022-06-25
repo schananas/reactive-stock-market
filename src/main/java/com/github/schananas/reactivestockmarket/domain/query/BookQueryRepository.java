@@ -13,6 +13,8 @@ import java.util.List;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.CopyOnWriteArrayList;
 
+import static com.github.schananas.reactivestockmarket.Config.DEFAULT_CONCURRENCY_LEVEL;
+
 /**
  * Thread-safe implementation of {@link QueryRepository} used to store order & book projections.
  *
@@ -21,7 +23,7 @@ import java.util.concurrent.CopyOnWriteArrayList;
 @Component
 public class BookQueryRepository implements QueryRepository<OrderEntry> {
 
-    private final ConcurrentHashMap<Long, OrderEntry> projection = new ConcurrentHashMap<>();
+    private final ConcurrentHashMap<Long, OrderEntry> projection = new ConcurrentHashMap<>(32,0.75f,DEFAULT_CONCURRENCY_LEVEL);
 
     /**
      * Returns current order projection

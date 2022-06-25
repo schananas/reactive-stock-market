@@ -7,6 +7,8 @@ import reactor.core.publisher.Mono;
 
 import java.util.concurrent.ConcurrentHashMap;
 
+import static com.github.schananas.reactivestockmarket.Config.DEFAULT_CONCURRENCY_LEVEL;
+
 /**
  * Thread-safe implementation of {@link AggregateRepository} used to store Book aggregates
  *
@@ -15,7 +17,7 @@ import java.util.concurrent.ConcurrentHashMap;
 @Component("aggregateRepository")
 public class BookAggregateRepository implements AggregateRepository<Book> {
 
-    private final ConcurrentHashMap<String, Book> aggregates = new ConcurrentHashMap<>();
+    private final ConcurrentHashMap<String, Book> aggregates = new ConcurrentHashMap<>(32,0.75f,DEFAULT_CONCURRENCY_LEVEL);
     private final BookQueryRepository bookQueryRepository;
 
     public BookAggregateRepository(BookQueryRepository bookQueryRepository) {

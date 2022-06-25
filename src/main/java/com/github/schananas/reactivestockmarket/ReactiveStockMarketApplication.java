@@ -11,16 +11,6 @@ import java.util.List;
 @SpringBootApplication
 public class ReactiveStockMarketApplication {
 
-    @Bean
-    RestTemplate restTemplate(ProtobufHttpMessageConverter hmc) {
-        return new RestTemplate(List.of(hmc));
-    }
-
-    @Bean
-    ProtobufHttpMessageConverter protobufHttpMessageConverter() {
-        return new ProtobufHttpMessageConverter();
-    }
-
     public static void main(String[] args) {
         SpringApplication.run(ReactiveStockMarketApplication.class, args);
     }

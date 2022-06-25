@@ -14,6 +14,8 @@ import reactor.core.scheduler.Schedulers;
 import java.util.function.Consumer;
 import javax.annotation.PreDestroy;
 
+import static com.github.schananas.reactivestockmarket.Config.DEFAULT_CONCURRENCY_LEVEL;
+
 /**
  * Routes commands to corresponding aggregate.
  * <p>
@@ -60,7 +62,7 @@ public class CommandBus {
                                                                                                   .doOnError(cmd::signalError)
 
 
-                                                                   )))
+                                                                   )), DEFAULT_CONCURRENCY_LEVEL)
                                                    .subscribe();
     }
 
