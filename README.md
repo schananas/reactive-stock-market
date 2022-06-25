@@ -203,4 +203,6 @@ Originally assigment is given to Senior Software Engineers as a technical coding
 
 Read [system requirements here.](system_requirements.pdf)
 
+---------------------------------------
+
 Created with :heart: by [schananas](https://twitter.com/91stefan_)
