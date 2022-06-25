@@ -115,7 +115,7 @@ public class MarketController {
 
     private Mono<? extends OrderEntry> getOrderProjection(OrderAcceptedEvent ev) {
         return bookQueryRepository.getProjection(ev.orderId())
-                                  .repeatWhenEmpty(5, o -> o.delayElements(
+                                  .repeatWhenEmpty(10, o -> o.delayElements(
                                           Duration.ofMillis(50)));
     }
 
