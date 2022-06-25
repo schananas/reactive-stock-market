@@ -202,3 +202,5 @@ Then execute `mvn spring-boot:run` to run application, or use IDE of choice to r
 Originally assigment is given to Senior Software Engineers as a technical coding interview in some stock/crypto market companies.
 
 Read [system requirements here.](system_requirements.pdf)
+
+Created with :heart: by [schananas](https://twitter.com/91stefan_)
