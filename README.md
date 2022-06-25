@@ -3,12 +3,13 @@
 ### Introduction
 
 This project takes you through the design of simple reactive stock market application.
+Sole purpose of this project is to educate.
 
 #### Takeaways:
 - Spring Boot application with matching engine as it core
-- Supports limit order
-- Matching engine implemented using Max-Heap and Min-Heap
-- Light custom Reactive CQRS framework
+- Matching engine supports limit order
+- Matching engine is implemented using Max-Heap and Min-Heap
+- Lightweight and custom-built Reactive CQRS framework
 - Lockless - light thread synchronisation and good scalability potential
 - In-memory storage - in this demo all data is stored in memory without persistent storage
 - Application supports backpressure and event streaming
