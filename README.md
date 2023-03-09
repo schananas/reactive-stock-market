@@ -198,9 +198,6 @@ Execute `mvn clean install` to build project and generate protobuf classes.
 Then execute `mvn spring-boot:run` to run application, or use IDE of choice to run application as Spring Boot application.
 
 
-
-Read [system requirements here.](system_requirements.pdf)
-
 ---------------------------------------
 
 Created with :heart: by [schananas](https://twitter.com/91stefan_)
